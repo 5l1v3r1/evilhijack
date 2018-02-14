@@ -25,16 +25,25 @@
 ; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 ; OF THE POSSIBILITY OF SUCH DAMAGE.
 
+; XXX NOTE:
+; Some addresses below are hardcoded to match my FreeBSD 12-CURRENT
+; system. These addresses should be updated for 11.1-RELEASE before
+; CarolinaCon and Thotcon.
+
 BITS 64
 
 ;;;;;;;;;;;;;;;;;;;;
 ; Backup registers ;
 ;;;;;;;;;;;;;;;;;;;;
 
+push rbp
+mov rbp, rsp
+
 push rax
 push rbx
 push rsi
 push rdi
+push rdx
 
 ;;;;;;;;;;;;;;;
 ; Call dlopen ;
@@ -65,9 +74,12 @@ mov [rbx], rax
 ; Restore registers ;
 ;;;;;;;;;;;;;;;;;;;;;
 
+pop rdx
 pop rdi
 pop rsi
 pop rbx
 pop rax
+
+pop rbp
 
 ret
