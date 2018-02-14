@@ -55,6 +55,7 @@ main(int argc, char *argv[])
 	unsigned long addr, mapping, pltgot_addr;
 	char *inject, *so, *targetfunc;
 	FUNC *func, *funcs;
+	RTLD_SYM *sym;
 	struct stat sb;
 	void *map, *p1;
 	HIJACK *ctx;
@@ -91,7 +92,7 @@ main(int argc, char *argv[])
 	if (so == NULL)
 		usage(argv[0], 1);
 
-	ctx = InitHijack(F_DEFAULT | F_DEBUG | F_DEBUG_VERBOSE);
+	ctx = InitHijack(F_DEFAULT /* | F_DEBUG | F_DEBUG_VERBOSE*/);
 	if (ctx == NULL) {
 		fprintf(stderr, "[-] Could not create the libhijack ctx\n");
 		exit(1);
@@ -136,9 +137,6 @@ main(int argc, char *argv[])
 		if (!(func->name))
 			continue;
 
-		printf("Found %s in %s at 0x%016lx\n", targetfunc,
-		    func->libname, func->vaddr);
-
 		pltgot_addr = FindFunctionInGot(ctx, ctx->pltgot,
 		    func->vaddr);
 		if (pltgot_addr > 0)
@@ -154,11 +152,9 @@ main(int argc, char *argv[])
 		exit(1);
 	}
 
-	fprintf(stderr, "[+] Found pltgot address at 0x%016lx\n",
-	    pltgot_addr);
-
 	mapping = MapMemory(ctx, (unsigned long)NULL, 4096,
-	    PROT_READ | PROT_EXEC, MAP_ANONYMOUS | MAP_SHARED);
+	    PROT_READ | PROT_WRITE | PROT_EXEC,
+	    MAP_ANONYMOUS | MAP_SHARED);
 	if (mapping == (unsigned long)NULL) {
 		fprintf(stderr, "[-] Could not create anonymous mapping\n");
 		Detach(ctx);
@@ -208,6 +204,20 @@ main(int argc, char *argv[])
 	}
 	memmove(p1, &pltgot_addr, 8);
 	fprintf(stderr, "[+] shellcode injected at 0x%016lx\n", addr);
+
+	sym = resolv_rtld_sym(ctx, "dlopen");
+	if (sym != NULL) {
+		fprintf(stderr, "[*] dlopen is at 0x%016lx\n", sym->p.ulp);
+	} else {
+		fprintf(stderr, "[-] Could not resolve dlopen\n");
+	}
+
+	sym = resolv_rtld_sym(ctx, "dlsym");
+	if (sym != NULL) {
+		fprintf(stderr, "[*] dlsym is at 0x%016lx\n", sym->p.ulp);
+	} else {
+		fprintf(stderr, "[-] Could not resolve dlsym\n");
+	}
 
 	InjectShellcodeFromMemoryAndRun(ctx, addr, map,
 	    sb.st_size, true);

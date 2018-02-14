@@ -36,14 +36,12 @@ BITS 64
 ; Backup registers ;
 ;;;;;;;;;;;;;;;;;;;;
 
-push rbp
-mov rbp, rsp
-
-push rax
-push rbx
-push rsi
 push rdi
+push rsi
 push rdx
+push rcx
+push rbx
+push rax
 
 ;;;;;;;;;;;;;;;
 ; Call dlopen ;
@@ -51,8 +49,8 @@ push rdx
 
 mov rdi, 0x1111111111111111 ; .so filename (string)
 mov rsi, 0x102
-mov rbx, 0x80060c070 ; addr of dlopen (unsigned long)
-call rbx
+mov rax, 0x00000008014cb070 ; addr of dlopen (unsigned long)
+call rax
 
 ;;;;;;;;;;;;;;
 ; Call dlsym ;
@@ -60,8 +58,8 @@ call rbx
 
 mov rdi, rax
 mov rsi, 0x2222222222222222 ; function name (string)
-mov rbx, 0x80060c230 ; addr of dlsym (unsigned long)
-call rbx
+mov rax, 0x00000008014cb230 ; addr of dlsym (unsigned long)
+call rax
 
 ;;;;;;;;;;;;;;;;;
 ; Patch PLT/GOT ;
@@ -74,12 +72,11 @@ mov [rbx], rax
 ; Restore registers ;
 ;;;;;;;;;;;;;;;;;;;;;
 
-pop rdx
-pop rdi
-pop rsi
-pop rbx
 pop rax
-
-pop rbp
+pop rbx
+pop rcx
+pop rdx
+pop rsi
+pop rdi
 
 ret
