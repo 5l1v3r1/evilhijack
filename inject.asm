@@ -32,6 +32,9 @@
 
 BITS 64
 
+push rbp
+mov rbp, rsp
+
 ;;;;;;;;;;;;;;;;;;;;
 ; Backup registers ;
 ;;;;;;;;;;;;;;;;;;;;
@@ -60,12 +63,25 @@ mov rdi, rax
 mov rsi, 0x2222222222222222 ; function name (string)
 mov rax, 0x00000008014cb230 ; addr of dlsym (unsigned long)
 call rax
+push rax
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; Mark PLT/GOT writable ;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+mov rbx, 0x3333333333333333 ; addr of PLT/GOT entry (unsigned long)
+push rbx
+mov rax, 74
+mov rdi, rbx
+mov rsi, 4096
+mov rdx, 0x7
+syscall
 
 ;;;;;;;;;;;;;;;;;
 ; Patch PLT/GOT ;
 ;;;;;;;;;;;;;;;;;
 
-mov rbx, 0x3333333333333333 ; addr of PLT/GOT entry (unsigned long)
+pop rbx
+pop rax
 mov [rbx], rax
 
 ;;;;;;;;;;;;;;;;;;;;;
@@ -78,5 +94,6 @@ pop rcx
 pop rdx
 pop rsi
 pop rdi
+pop rbp
 
 ret
