@@ -153,7 +153,7 @@ main(int argc, char *argv[])
 	}
 
 	mapping = MapMemory(ctx, (unsigned long)NULL, 4096,
-	    PROT_READ | PROT_WRITE | PROT_EXEC,
+	    PROT_READ | PROT_EXEC,
 	    MAP_ANONYMOUS | MAP_SHARED);
 	if (mapping == (unsigned long)NULL) {
 		fprintf(stderr, "[-] Could not create anonymous mapping\n");
