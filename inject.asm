@@ -52,7 +52,7 @@ push rax
 
 mov rdi, 0x1111111111111111 ; .so filename (string)
 mov rsi, 0x102
-mov rax, 0x00000008014cb070 ; addr of dlopen (unsigned long)
+mov rax, 0x000000080149e4d0 ; addr of dlopen (unsigned long)
 call rax
 
 ;;;;;;;;;;;;;;
@@ -61,7 +61,7 @@ call rax
 
 mov rdi, rax
 mov rsi, 0x2222222222222222 ; function name (string)
-mov rax, 0x00000008014cb230 ; addr of dlsym (unsigned long)
+mov rax, 0x000000080149e690 ; addr of dlsym (unsigned long)
 call rax
 push rax
 
@@ -72,6 +72,7 @@ mov rbx, 0x3333333333333333 ; addr of PLT/GOT entry (unsigned long)
 push rbx
 mov rax, 74
 mov rdi, rbx
+and rdi, 0xfffffffffffff000
 mov rsi, 4096
 mov rdx, 0x7
 syscall
@@ -83,6 +84,16 @@ syscall
 pop rbx
 pop rax
 mov [rbx], rax
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Mark PLT/GOT unwritable ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+mov rdi, rbx
+and rdi, 0xfffffffffffff000
+mov rax, 74
+mov rsi, 4096
+mov rdx, 0x5
+syscall
 
 ;;;;;;;;;;;;;;;;;;;;;
 ; Restore registers ;
