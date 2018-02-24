@@ -52,7 +52,7 @@ push rax
 
 mov rdi, 0x1111111111111111 ; .so filename (string)
 mov rsi, 0x102
-mov rax, 0x00000008014c34d0 ; addr of dlopen (unsigned long)
+mov rax, 0x00000008006974d0 ; addr of dlopen (unsigned long)
 call rax
 
 ;;;;;;;;;;;;;;
@@ -61,7 +61,7 @@ call rax
 
 mov rdi, rax
 mov rsi, 0x2222222222222222 ; function name (string)
-mov rax, 0x00000008014c3690 ; addr of dlsym (unsigned long)
+mov rax, 0x0000000800697690 ; addr of dlsym (unsigned long)
 call rax
 push rax
 
