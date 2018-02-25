@@ -1,7 +1,7 @@
 .include "Makefile.inc"
 
 PROG=	evilhijack
-SRCS=	evilhijack.c
+SRCS=	evilhijack.c hijack.c
 MAN=
 
 .if defined(PREFIX)

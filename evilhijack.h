@@ -27,74 +27,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#ifndef _EVILHIJACK_H
+#define	_EVILHIJACK_H
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <sys/user.h>
-#include <fcntl.h>
+void do_hijack(pid_t, char *, char *, char *);
 
-#include <hijack.h>
-
-#include "evilhijack.h"
-
-void
-usage(char *name, int err)
-{
-
-	fprintf(stderr, "USAGE: %s -p pid -i inject -s so -f func\n",
-	    name);
-	exit(err);
-}
-
-int
-main(int argc, char *argv[])
-{
-	unsigned long addr, mapping, pltgot_addr;
-	char *inject, *so, *targetfunc;
-	FUNC *func, *funcs;
-	RTLD_SYM *sym;
-	struct stat sb;
-	void *map, *p1;
-	HIJACK *ctx;
-	int ch, fd;
-	pid_t pid;
-
-	pid = -1;
-	while ((ch = getopt(argc, argv, "i:f:p:s:")) != -1) {
-		switch (ch) {
-		case 'i':
-			inject = optarg;
-			break;
-		case 'f':
-			targetfunc = optarg;
-			break;
-		case 'p':
-			if (sscanf(optarg, "%d", &pid) != 1)
-				usage(argv[0], 1);
-			break;
-		case 's':
-			so = optarg;
-			break;
-		default:
-			usage(argv[0], 0);
-		}
-	}
-
-	if (inject == NULL)
-		usage(argv[0], 1);
-	if (targetfunc == NULL)
-		usage(argv[0], 1);
-	if (pid == -1)
-		usage(argv[0], 1);
-	if (so == NULL)
-		usage(argv[0], 1);
-
-	do_hijack(pid, inject, so, targetfunc);
-
-	return (0);
-}
+#endif

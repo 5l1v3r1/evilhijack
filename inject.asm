@@ -52,7 +52,7 @@ push rax
 
 mov rdi, 0x1111111111111111 ; .so filename (string)
 mov rsi, 0x102
-mov rax, 0x00000008014c34d0 ; addr of dlopen (unsigned long)
+mov rax, 0x2222222222222222 ; addr of dlopen (unsigned long)
 call rax
 
 ;;;;;;;;;;;;;;
@@ -60,15 +60,15 @@ call rax
 ;;;;;;;;;;;;;;
 
 mov rdi, rax
-mov rsi, 0x2222222222222222 ; function name (string)
-mov rax, 0x00000008014c3690 ; addr of dlsym (unsigned long)
+mov rsi, 0x3333333333333333 ; function name (string)
+mov rax, 0x4444444444444444 ; addr of dlsym (unsigned long)
 call rax
 push rax
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Mark PLT/GOT writable ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-mov rbx, 0x3333333333333333 ; addr of PLT/GOT entry (unsigned long)
+mov rbx, 0x5555555555555555 ; addr of PLT/GOT entry (unsigned long)
 push rbx
 mov rax, 74
 mov rdi, rbx
