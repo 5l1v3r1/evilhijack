@@ -1,7 +1,7 @@
 .include "Makefile.inc"
 
 PROG=	evilhijack
-SRCS=	evilhijack.c hijack.c
+SRCS=	evilhijack.c
 MAN=
 
 .if defined(PREFIX)
@@ -13,6 +13,6 @@ BINDIR?=	/usr/sbin
 CFLAGS+= 	-I${SRCDIR}/libexec/rtld-elf \
 		-I${SRCDIR}/libexec/rtld-elf/${MACHINE_ARCH}
 
-LDADD+=		-lhijack
+LDADD+=		-lhijack -linfect
 
 .include <bsd.prog.mk>

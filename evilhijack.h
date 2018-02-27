@@ -30,6 +30,4 @@
 #ifndef _EVILHIJACK_H
 #define	_EVILHIJACK_H
 
-void do_hijack(pid_t, char *, char *, char *);
-
 #endif

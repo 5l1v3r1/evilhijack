@@ -39,6 +39,7 @@
 #include <fcntl.h>
 
 #include <hijack.h>
+#include <infect.h>
 
 #include "evilhijack.h"
 
@@ -94,7 +95,7 @@ main(int argc, char *argv[])
 	if (so == NULL)
 		usage(argv[0], 1);
 
-	do_hijack(pid, inject, so, targetfunc);
+	do_infect(pid, inject, so, targetfunc);
 
 	return (0);
 }
