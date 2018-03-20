@@ -57,17 +57,21 @@ main(int argc, char *argv[])
 {
 	unsigned long addr, mapping, pltgot_addr;
 	char *inject, *so, *targetfunc;
+	int capsicum, ch, fd;
 	FUNC *func, *funcs;
 	RTLD_SYM *sym;
 	struct stat sb;
 	void *map, *p1;
 	HIJACK *ctx;
-	int ch, fd;
 	pid_t pid;
 
 	pid = -1;
-	while ((ch = getopt(argc, argv, "i:f:p:s:")) != -1) {
+	capsicum = 0;
+	while ((ch = getopt(argc, argv, "ci:f:p:s:")) != -1) {
 		switch (ch) {
+		case 'c':
+			capsicum++;
+			break;
 		case 'i':
 			inject = optarg;
 			break;
@@ -95,7 +99,7 @@ main(int argc, char *argv[])
 	if (so == NULL)
 		usage(argv[0], 1);
 
-	do_infect(pid, inject, so, targetfunc);
+	do_infect(pid, capsicum, inject, so, targetfunc);
 
 	return (0);
 }
